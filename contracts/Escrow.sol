@@ -36,6 +36,7 @@ contract Escrow {
     mapping(uint256 => uint256) public escrowAmount;
     mapping(uint256 => address) public buyer;
     mapping(uint256 => bool) public inspectionPassed;
+    mapping(uint256 => mapping(address => bool)) public approval;
 
     constructor(
         address _nftAddress, 
@@ -78,7 +79,46 @@ contract Escrow {
         inspectionPassed[_nftID] = _passed;
     }
 
-    // function to receive ether in contract 
+    // Approve sale
+    function approveSale(uint256 _nftID) public {
+        approval[_nftID][msg.sender] = true;
+    }
+
+  
+
+    // Finalize sal
+    // require inspection status (add more items here, like appraisal)
+    // require sale to be authorized
+    // require funds to be correct amount
+    // transfer NFT to buyer
+    // transfer funds to seller
+    function finalizeSale(uint256 _nftID) public {
+        require(inspectionPassed[_nftID]);
+        require(approval[_nftID][buyer[_nftID]]);
+        require(approval[_nftID][seller]);
+        require(approval[_nftID][lender]);
+        require(address(this).balance >= purchasePrice[_nftID]);
+
+        isListed[_nftID] = false;
+
+        (bool success, ) = payable(seller).call{value: address(this).balance}("");
+        require(success);
+
+        // Transfer NFT from seller to this contract 
+        IERC721(nftAddress).transferFrom(address(this), buyer[_nftID], _nftID);
+    }
+
+    // Cancel Sale (handle earnest deposit)
+    // if inspection status is not approved, then refund, otherwise send to seller
+    function cancelSale(uint256 _nftID) public {
+        if (inspectionPassed[_nftID] == false) {
+            payable(buyer[_nftID]).transfer(address(this).balance);
+        } else {
+            payable(seller).transfer(address(this).balance);
+        }
+    }
+
+      // function to receive ether in contract 
     receive() external payable {
 
     }
