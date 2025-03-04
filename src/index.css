@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap");
 
 * {
   margin: 0;
@@ -7,10 +7,10 @@
 }
 
 :root {
-  --clr-white: #FFFFFF;
+  --clr-white: #ffffff;
   --clr-black: #202020;
   --clr-grey: #707070;
-  --clr-blue: #6C63FF;
+  --clr-blue: #6c63ff;
   --clr-blue-2: #4c46b6;
   --clr-green: #4fb646;
 }
@@ -83,7 +83,7 @@ nav {
   border-radius: 4px;
 
   font-family: "Open Sans";
-  font-size: 1.10em;
+  font-size: 1.1em;
   font-weight: 600;
 
   cursor: pointer;
@@ -108,7 +108,7 @@ header {
 
 .header__title {
   position: absolute;
-  top: 25%;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
 
@@ -207,7 +207,7 @@ header {
 
 .card__info p {
   font-family: "Open Sans";
-  font-size: 0.90em;
+  font-size: 0.9em;
   margin-top: 5px;
 }
 
@@ -303,7 +303,7 @@ header {
   border-radius: 4px;
 
   font-family: "Open Sans";
-  font-size: 1.10em;
+  font-size: 1.1em;
   font-weight: 600;
 
   cursor: pointer;
