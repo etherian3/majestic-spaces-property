@@ -9,10 +9,11 @@ describe("Escrow", () => {
   let buyer, seller, inspector, lender;
   let realEstate, escrow;
 
-  it("saves the addresses", async () => {
+  beforeEach(async () => {
     // Setup accounts hardhat
     [buyer, seller, inspector, lender] = await ethers.getSigners();
 
+    // Deploy Real estate contracts
     const RealEstate = await ethers.getContractFactory("RealEstate");
     realEstate = await RealEstate.deploy();
 
@@ -31,5 +32,48 @@ describe("Escrow", () => {
       inspector.address,
       lender.address
     );
+
+    // Approve property
+    transaction = await realEstate.connect(seller).approve(escrow.address, 1);
+    await transaction.wait();
+
+    // List property
+    transaction = await escrow.connect(seller).list(1);
+    await transaction.wait();
+  });
+
+  describe("Deployment", async () => {
+    it("Returns NFT Address", async () => {
+      const result = await escrow.nftAddress();
+      expect(result).to.be.equal(realEstate.address);
+    });
+
+    it("Returns seller", async () => {
+      const result = await escrow.seller();
+      expect(result).to.be.equal(seller.address);
+    });
+
+    it("Returns inspector", async () => {
+      const result = await escrow.inspector();
+      expect(result).to.be.equal(inspector.address);
+    });
+
+    it("Returns lender", async () => {
+      const result = await escrow.lender();
+      expect(result).to.be.equal(lender.address);
+    });
+  });
+
+  // Listing
+
+  describe("Listing", async () => {
+    it("Updates as listed", async () => {
+      const result = await escrow.isListed(1);
+      expect(result).to.be.equal(true);
+    });
+
+    it("Updates ownership", async () => {
+      expect(await realEstate.ownerOf(1)).to.be.equal(escrow.address);
+    });
   });
 });
