@@ -8,6 +8,12 @@ const Navigation = ({ account, setAccount }) => {
     });
     const account = ethers.utils.getAddress(accounts[0]);
     setAccount(account);
+    localStorage.setItem("account", account);
+  };
+
+  const disconnectHandler = () => {
+    setAccount(null);
+    localStorage.removeItem("account");
   };
 
   return (
@@ -30,7 +36,7 @@ const Navigation = ({ account, setAccount }) => {
       </div>
 
       {account ? (
-        <button type="button" className="nav__connect">
+        <button type="button" className="nav__connect" onClick={disconnectHandler}>
           {account.slice(0, 6) + "..." + account.slice(38, 42)}
         </button>
       ) : (
