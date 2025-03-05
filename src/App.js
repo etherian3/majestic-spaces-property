@@ -16,49 +16,53 @@ import config from "./config.json";
 function App() {
   const [provider, setProvider] = useState(null);
   const [escrow, setEscrow] = useState(null);
-
-  const [account, setAccount] = useState(null);
-
+  const [account, setAccount] = useState(localStorage.getItem("account"));
   const [homes, setHomes] = useState([]);
   const [home, setHome] = useState({});
   const [toggle, setToggle] = useState(false);
 
   const loadBlockchainData = async () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    setProvider(provider);
-    const network = await provider.getNetwork();
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      setProvider(provider);
+      const network = await provider.getNetwork();
 
-    const realEstate = new ethers.Contract(
-      config[network.chainId].realEstate.address,
-      RealEstate,
-      provider
-    );
-    const totalSupply = await realEstate.totalSupply();
-    const homes = [];
+      const realEstate = new ethers.Contract(
+        config[network.chainId].realEstate.address,
+        RealEstate,
+        provider
+      );
 
-    for (var i = 1; i <= totalSupply; i++) {
-      const uri = await realEstate.tokenURI(i);
-      const response = await fetch(uri);
-      const metadata = await response.json();
-      homes.push(metadata);
-    }
+      const totalSupply = await realEstate.totalSupply();
+      const homes = [];
 
-    setHomes(homes);
+      for (var i = 1; i <= totalSupply; i++) {
+        const uri = await realEstate.tokenURI(i);
+        const response = await fetch(uri);
+        const metadata = await response.json();
+        homes.push(metadata);
+      }
 
-    const escrow = new ethers.Contract(
-      config[network.chainId].escrow.address,
-      Escrow,
-      provider
-    );
-    setEscrow(escrow);
+      setHomes(homes);
 
-    window.ethereum.on("accountsChanged", async () => {
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
+      const escrow = new ethers.Contract(
+        config[network.chainId].escrow.address,
+        Escrow,
+        provider
+      );
+      setEscrow(escrow);
+
+      window.ethereum.on("accountsChanged", async () => {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        const account = ethers.utils.getAddress(accounts[0]);
+        setAccount(account);
+        localStorage.setItem("account", account);
       });
-      const account = ethers.utils.getAddress(accounts[0]);
-      setAccount(account);
-    });
+    } catch (error) {
+      console.error("Error loading blockchain data:", error);
+    }
   };
 
   useEffect(() => {
