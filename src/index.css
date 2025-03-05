@@ -158,8 +158,8 @@ header {
 
 .cards {
   display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   margin-top: 20px;
 }
 
@@ -168,6 +168,8 @@ header {
   height: 275px;
 
   border: 1px solid var(--clr-black);
+  border-radius: 10px;
+  overflow: hidden;
   margin: 10px auto;
 
   cursor: pointer;
@@ -181,13 +183,20 @@ header {
 }
 
 .card__image {
-  position: absolute;
+  position: relative;
   width: 100%;
-  z-index: -1;
+  height: 200px;
+  overflow: hidden;
 }
 
 .card__image img {
-  max-width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
 .card__info {
@@ -230,15 +239,15 @@ header {
 }
 
 .home__details {
-  display: grid;
-  /* grid-template-columns: repeat(2, 1fr); */
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
-  align-items: center;
-
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  
   width: 80%;
-  height: 70%;
+  height: auto;
+  max-height: 90%;
   margin: 0 auto;
-  padding: 20px;
+  padding: 10px;
 
   position: fixed;
   top: 50%;
@@ -247,11 +256,13 @@ header {
   z-index: 2;
 
   background: var(--clr-white);
+  overflow: auto;
 }
 
 .home__image {
-  max-width: 500px;
-  margin: 20px auto;
+  max-width: 45%;
+  height: auto;
+  margin: 10px;
 }
 
 .home__image img {
@@ -278,11 +289,10 @@ header {
 }
 
 .home__overview {
-  height: 100%;
-  margin: 0 20px;
-  padding-right: 40px;
-
-  overflow-y: scroll;
+  max-width: 60%;
+  overflow-y: auto;
+  padding: 10px;
+  font-size: 0.9em;
 }
 
 .home__overview h1,
@@ -307,11 +317,12 @@ header {
   border-radius: 4px;
 
   font-family: "Open Sans";
-  font-size: 1.1em;
+  font-size: 0.9em;
   font-weight: 600;
 
   cursor: pointer;
   transition: all 250ms ease;
+  padding: 10px;
 }
 
 .home__buy {
